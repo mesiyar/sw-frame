@@ -43,6 +43,7 @@ class HttpServer
 
     public function onRequest($request, $response)
     {
-        App::get_instance()->http($request, $response);
+        echo "reveive request".PHP_EOL;
+        App::getInstance()->http($request, $response);
     }
 }

@@ -12,32 +12,22 @@ namespace core\lib;
 
 class App
 {
-    private static $instance;
+    use Single;
 
     /**
      * @var array
      */
     private static $classMap;
 
-    //防止被一些讨厌的小伙伴不停的实例化，自己玩。
     private function __construct()
     {
-    }
-
-    //还得让伙伴能实例化，并且能用它。。
-    public static function get_instance()
-    {
-        if (is_null(self::$instance)) {
-            self::$instance = new self();
-        }
-        return self::$instance;
     }
 
     public function http($request, $response)
     {
         if ($request->server['request_uri'] == '/favicon.ico') return;
 
-        $req = Request::get_instance();
+        $req = Request::getInstance();
         $req->set($request);
 
         try {
@@ -58,7 +48,7 @@ class App
 
             $content = ob_get_contents();
             ob_end_clean();
-
+            echo "aaa".PHP_EOL;
             $response->header("Content-Type", "text/html");
             //$response->header("Charset", "UTF-8");
             $response->end($content);

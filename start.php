@@ -8,4 +8,5 @@
 define('BASE_PATH', __DIR__ . '/');
 require BASE_PATH.'core/lib/Loader.php';
 core\lib\Loader::register();
+
 new core\server\HttpServer();

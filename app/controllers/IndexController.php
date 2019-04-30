@@ -9,16 +9,21 @@
 namespace app\controllers;
 
 use core\lib\Controller;
+use core\lib\mysql\Mysql;
 
 class IndexController extends Controller
 {
     public function actionIndex()
     {
-        $data = [
-            'code' => 0,
-            'msg' => 'index controller'
-        ];
+        $query = Mysql::getInstance();
+        $result = $query->query('select * from gm_user limit 1');
 
-        return $this->asJson($data);
+        //$res = $swoole_mysql->query('select * from gm_user limit 100');
+//        $data = [
+//            'code' => 0,
+//            'msg' => 'index controller'
+//        ];
+
+        return $this->asJson($result);
     }
 }

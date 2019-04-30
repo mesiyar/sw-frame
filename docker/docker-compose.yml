@@ -9,7 +9,7 @@ services:
          - "9502:9502"
          - "9503:9503"
        volumes:
-         - ./../../fm-swoole:/usr/local/code
+         - ./../:/usr/local/code
        stdin_open: true 
        tty: true
        privileged: true

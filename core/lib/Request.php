@@ -11,7 +11,7 @@ namespace core\lib;
 
 class Request
 {
-    private static $instance;
+    use Single;
 
     private $server;
     private $header;
@@ -30,14 +30,6 @@ class Request
 
     private function __construct()
     {
-    }
-
-    public static function get_instance()
-    {
-        if (is_null(self::$instance)) {
-            self::$instance = new self();
-        }
-        return self::$instance;
     }
 
     //先拿到$request，然后挨个给它变身
