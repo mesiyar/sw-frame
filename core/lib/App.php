@@ -9,11 +9,16 @@
 namespace core\lib;
 
 
-
 class App
 {
     use Single;
 
+    /**
+     * @var Request
+     */
+    public static $request = null;
+
+    public static $response = null;
     /**
      * @var array
      */
@@ -27,30 +32,33 @@ class App
     {
         if ($request->server['request_uri'] == '/favicon.ico') return;
 
-        $req = Request::getInstance();
-        $req->set($request);
+        App::$request = Request::getInstance();
+        App::$request->set($request);
+
+        App::$response = $response;
 
         try {
             if (!empty(ob_get_contents())) ob_end_clean();
             ob_start();
-            $map = $req->parse();
+            $map = App::$request->parse();
             /**
              * @var $controller Controller
              */
-            if (!isset(self::$classMap[$map['class']])) {
-                $controller = new $map['class'];
-                self::$classMap[$map['class']] = $controller;
+            if (class_exists($map['class'])) {
+                if (!isset(self::$classMap[$map['class']])) {
+                    $controller                    = new $map['class'];
+                    self::$classMap[$map['class']] = $controller;
+                } else {
+                    $controller = self::$classMap[$map['class']];
+                }
+                $controller->run($map['action']);
             } else {
-                $controller = self::$classMap[$map['class']];
+                Log::log("class {$map['class']} not found!", Log::ERROR);
             }
-
-            $controller->run($map['action']);
 
             $content = ob_get_contents();
             ob_end_clean();
-            echo "aaa".PHP_EOL;
-            $response->header("Content-Type", "text/html");
-            //$response->header("Charset", "UTF-8");
+
             $response->end($content);
         } catch (\Exception $e) {
             $response->header("Content-Type", "text/html");

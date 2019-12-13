@@ -23,10 +23,10 @@ Trait ViewTrait
 
     }
 
-    private function rederFile($file)
+    private function renderFile($file)
     {
         if (is_file($file)) {
-            include_once $file;
+            include $file;
         } else {
             throw new HttpException(404, 'view file not found');
         }

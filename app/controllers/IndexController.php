@@ -15,15 +15,19 @@ class IndexController extends Controller
 {
     public function actionIndex()
     {
-        $query = Mysql::getInstance();
-        $result = $query->query('select * from gm_user limit 1');
+        $result = Mysql::query("select * from t_pocket where user_id = xxx");
 
-        //$res = $swoole_mysql->query('select * from gm_user limit 100');
 //        $data = [
 //            'code' => 0,
 //            'msg' => 'index controller'
 //        ];
+        return $this->asJson($result);
+    }
 
+    public function actionAdd()
+    {
+        $sql = "insert into t_pocket(user_id,zb_type,amount,create_time,remark) values (1,1,10.2,now(),'ces')";
+        $result = Mysql::query($sql);
         return $this->asJson($result);
     }
 }

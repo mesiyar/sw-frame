@@ -24,21 +24,25 @@ class Controller
      */
     public function asJson($data)
     {
-        return json_encode($data, JSON_UNESCAPED_UNICODE);
+        App::$response->header("Content-Type", "application/json");
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        return $this;
     }
 
     public function run($actionName)
     {
-        echo $actionName.PHP_EOL;
         $actionName = 'action' . $actionName;
-        if(method_exists($this, $actionName)) {
-            $content = $this->$actionName();
-            include BASE_PATH.'/app/views/layouts/main.php';
+        if (method_exists($this, $actionName)) {
+            $ref = new \ReflectionClass($this);
+            Log::log($ref->name . '/' . $actionName, Log::INFO);
+            $this->$actionName();
         } else {
-            throw new HttpException(404,'function not exists');
+            Log::log('function not exists', Log::ERROR);
+            echo 404, 'function not exists';
         }
-        //return $result;
     }
+
+
 
 
 }

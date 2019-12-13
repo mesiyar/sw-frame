@@ -23,9 +23,10 @@ class HttpServer
         $server->set([
             'daemonize' => 0,
             'enable_static_handler' => TRUE,
-            'document_root' => BASE_PATH . '/static/',
+            #'document_root' => BASE_PATH . '/static/',
             'worker_num' => 4,
             'max_request' => 10000,
+            'log_file' => BASE_PATH.'app/runtime/logs/swoole.log'
             //'task_worker_num' => 4,
         ]);
 

@@ -6,7 +6,7 @@
  * Time: 17:15
  */
 define('BASE_PATH', __DIR__ . '/');
-require BASE_PATH.'core/lib/Loader.php';
-core\lib\Loader::register();
+
+require BASE_PATH . 'vendor/autoload.php';
 
 new core\server\HttpServer();

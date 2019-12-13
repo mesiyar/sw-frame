@@ -37,13 +37,16 @@ class Mysql
 
     private $database = '';
 
-    public static function getInstance()
+    /**
+     * @return \Swoole\Coroutine\MySQL
+     */
+    public function getConnection()
     {
-        if (is_null(self::$instance)) {
-            self::$instance = new self();
-            self::$instance->generatePool();
+        $instance = static::getInstance();
+        if (empty($this->pools)) {
+            $instance->generatePool();
         }
-        return self::$instance->getActive();
+        return $instance->getActive();
     }
 
     /**
@@ -53,15 +56,15 @@ class Mysql
      */
     private function generatePool()
     {
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i <= 5; $i++) {
             $client = new swMysql();
 
             $client->connect([
-                'host' => '192.168.1.21',
-                'port' => 3306,
-                'user' => 'gm',
-                'password' => 'gm@GM123',
-                'database' => 'hefu',
+                'host'     => 'mysql',
+                'port'     => 3306,
+                'user'     => 'root',
+                'password' => 'A123456',
+                'database' => 'jizhangben',
             ]);
 
             $this->pools[] = $client;
@@ -71,6 +74,17 @@ class Mysql
     private function getActive()
     {
         return $this->pools[mt_rand(0, 5)];
+    }
+
+    public static function query($sql)
+    {
+        $connected = self::getInstance()->getConnection();
+        $stmt      = $connected->prepare($sql);
+        if ($stmt == false) {
+            var_dump($connected->errno, $connected->error);
+        } else {
+            return $stmt->execute();
+        }
     }
 
 

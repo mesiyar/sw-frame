@@ -17,6 +17,11 @@ trait Single
     {
     }
 
+    private function __clone()
+    {
+        // TODO: Implement __clone() method.
+    }
+
     public static function getInstance(...$args)
     {
         if (is_null(self::$instance)) {

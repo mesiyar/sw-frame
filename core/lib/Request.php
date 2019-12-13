@@ -35,16 +35,16 @@ class Request
     //先拿到$request，然后挨个给它变身
     public function set($request)
     {
-        $this->server = $request->server;
-        $this->header = $request->header;
-        $this->tmpfiles = $request->tmpfiles;
-        $this->request = $request->request;
-        $this->cookie = $request->cookie;
-        $this->get = $request->get;
-        $this->files = $request->files;
-        $this->post = $request->post;
+        $this->server     = $request->server;
+        $this->header     = $request->header;
+        $this->tmpfiles   = $request->tmpfiles;
+        $this->request    = $request->request;
+        $this->cookie     = $request->cookie;
+        $this->get        = $request->get;
+        $this->files      = $request->files;
+        $this->post       = $request->post;
         $this->rawContent = $request->rawContent();
-        $this->getData = $request->getData();
+        $this->getData    = $request->getData();
     }
 
     public function __get($name)
@@ -99,28 +99,32 @@ class Request
      */
     public function parse()
     {
+
         $map = explode('/', $this->server['request_uri']);
+        $map = array_filter($map, function ($v){
+            return $v == '' ? false :true;
+        });
 
         if (empty($map)) {
             $controller = $this->defaultController;
-            $action = $this->defaultAction;
-        } elseif (count($map) == 3) {
+            $action     = $this->defaultAction;
+        } elseif (count($map) == 2) {
             $controller = $this->parseString($map[1]);
-            $action = $this->parseString($map[2]);
+            $action     = $this->parseString($map[2]);
         } else {
             $controller = $this->parseString($map[1]);
-            $action = $this->defaultAction;
+            $action     = $this->defaultAction;
         }
 
         return [
-            'class' => "\\app\\controllers\\{$controller}Controller",
+            'class'  => "\\app\\controllers\\{$controller}Controller",
             'action' => ucfirst($action)
         ];
     }
 
     private function parseString($string)
     {
-        $array = explode('-', $string);
+        $array  = explode('-', $string);
         $output = '';
         foreach ($array as $value) {
             $output .= ucfirst($value);
